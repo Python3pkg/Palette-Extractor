@@ -20,8 +20,7 @@ class Singleton(type):
 		return cls._instances[cls]
 
 
-class PaletteSampler():
-	__metaclass__ = Singleton
+class PaletteSampler(metaclass=Singleton):
 	im_filename_ = None
 	im_ = None
 	palette_ = None
@@ -57,9 +56,9 @@ class PaletteSampler():
 		points = self.get_points()
 		clusters = self.kmeans(points, n, 1)
 
-		rgbs = [map(int, c.center.coords) for c in clusters]
+		rgbs = [list(map(int, c.center.coords)) for c in clusters]
 		rgbs.sort(key= lambda x: step(x[0],x[1],x[2],8))
-		hexa = map(rtoh, rgbs)
+		hexa = list(map(rtoh, rgbs))
 
 		return hexa, rgbs
 
@@ -113,7 +112,7 @@ class PaletteSampler():
 		if self.new_im is not None:			
 			self.new_im.save(filename)
 		else:
-			print "Error, no file loaded in memory"
+			print("Error, no file loaded in memory")
 
 	def render(self, n=3, percent=0.1, output="~temp.png"):
 		self.im_ = Image.open(self.im_filename_)
@@ -137,7 +136,7 @@ class PaletteSampler():
 		del draw
 
 		images = [self.im_,self.palette_]
-		widths, heights = zip(*(i.size for i in images))
+		widths, heights = list(zip(*(i.size for i in images)))
 
 		total_width = sum(widths)
 		max_height = max(heights)
@@ -175,5 +174,5 @@ if __name__ == '__main__':
 
 	_, a, b = test(args.image, args.colors_palette)
 
-	print(a,b)
-	print( time.time()-delta)
+	print((a,b))
+	print(( time.time()-delta))
